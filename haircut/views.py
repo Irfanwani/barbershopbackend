@@ -17,7 +17,7 @@ def getUniqueCode(query):
 
   if code not in query:
     return code
-  getUniqueCode()
+  getUniqueCode() # type: ignore
 
 
 

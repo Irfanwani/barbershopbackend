@@ -30,9 +30,10 @@ def check(email, user, request):
     try:
         try:
             barber = BarberDetails.objects.get(
-                id=User.objects.get(username=user).id)
+                id=User.objects.get(username=user).id)  # type: ignore
 
-            details = BarberDetailSerializer(barber, context={'request': request}).data
+            details = BarberDetailSerializer(
+                barber, context={'request': request}).data
 
             try:
                 BankDetails.objects.get(id=barber)
@@ -47,7 +48,7 @@ def check(email, user, request):
 
         except:
             details = UserDetailSerializer(UserDetails.objects.get(
-                id=User.objects.get(username=user).id), context={'request': request}).data
+                id=User.objects.get(username=user).id), context={'request': request}).data  # type: ignore
             account_added = False
             services_added = False
     except:
@@ -177,7 +178,8 @@ class LoginView(generics.GenericAPIView):
         user = serializer.validated_data
         email = User.objects.get(username=user).email
 
-        verified, details, account_added, services_added = check(email, user, request)
+        verified, details, account_added, services_added = check(
+            email, user, request)
 
         _, token = AuthToken.objects.create(user)
 
@@ -267,7 +269,8 @@ class PasswordReset(generics.GenericAPIView):
                 send_mail(subject='Password changed successfully!', message=f'Your password was updated successfully!',
                           from_email=getattr(settings, 'DEFAULT_FROM_EMAIL'), recipient_list=[f"{email}"], fail_silently=False)
 
-                verified, details, account_added, services_added = check(email, user, request)
+                verified, details, account_added, services_added = check(
+                    email, user, request)
 
                 _, token = AuthToken.objects.create(user)
                 return Response({

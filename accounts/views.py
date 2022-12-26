@@ -36,8 +36,8 @@ class UserDetailsView(generics.GenericAPIView):
                 'message': 'Something went wrong. Please try again.'
             }, status.HTTP_400_BAD_REQUEST)
 
-        request.data.update({'id': request.user.id, 'coords': coords})
-
+        request.data.update(
+            {'id': request.user.id, 'coords': coords})  # type: ignore
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         details = serializer.save()
@@ -56,7 +56,7 @@ class UserDetailsView(generics.GenericAPIView):
         try:
             coords = Point(
                 float(request.data['lng']), float(request.data['lat']))
-            request.data.update({'coords': coords})
+            request.data.update({'coords': coords})  # type: ignore
         except:
             pass
 
@@ -107,7 +107,7 @@ class BarberDetailsView(generics.GenericAPIView):
             }, status.HTTP_400_BAD_REQUEST)
 
         request.data.update({'id': request.user.id, 'coords': coords,
-                            'start_time': parsed_st, 'end_time': parsed_et})
+                            'start_time': parsed_st, 'end_time': parsed_et})  # type: ignore
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -127,7 +127,7 @@ class BarberDetailsView(generics.GenericAPIView):
         try:
             coords = Point(
                 float(request.data['lng']), float(request.data['lat']))
-            request.data.update({'coords': coords})
+            request.data.update({'coords': coords}) # type: ignore
         except:
             pass
 
@@ -138,7 +138,7 @@ class BarberDetailsView(generics.GenericAPIView):
             parsed_st = datetime.strptime(start_time, "%H:%M").time()
             parsed_et = datetime.strptime(end_time, "%H:%M").time()
             request.data.update(
-                {'start_time': parsed_st, 'end_time': parsed_et})
+                {'start_time': parsed_st, 'end_time': parsed_et}) # type: ignore
         except:
             pass
 
@@ -183,7 +183,8 @@ class AuthenticateUser(APIView):
     ]
 
     def get(self, request):
-        verified, details, account_added, services_added = check(request.user.email, request.user.username, request)
+        verified, details, account_added, services_added = check(
+            request.user.email, request.user.username, request)
 
         return Response({
             'verified': verified,
