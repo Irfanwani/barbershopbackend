@@ -23,7 +23,7 @@ class CreateOrder(GenericAPIView):
             amount = int(request.data['amount'])*100
             curr = request.data['currency']
             account = BankDetails.objects.get(id=User.objects.get(
-                username=request.data['barber']).id).account_id
+                username=request.data['barber']).id).account_id # type: ignore
             data = {
                 'amount': amount,
                 'currency': curr,
@@ -42,7 +42,7 @@ class CreateOrder(GenericAPIView):
                 ]
             }
 
-            order = client.order.create(data=data)
+            order = client.order.create(data=data) # type: ignore
 
             return Response({'order': order, 'key': settings.RAZOR_KEY_ID})
         except:
@@ -52,7 +52,7 @@ class CreateOrder(GenericAPIView):
 
     def put(self, request):
         try:
-            result = client.utility.verify_payment_signature(request.data)
+            result = client.utility.verify_payment_signature(request.data) # type: ignore
 
             apnt_id = request.data['apnt_id']
 

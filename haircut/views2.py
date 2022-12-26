@@ -39,8 +39,8 @@ class RatingsView(GenericAPIView):
                 request.data._mutable = True
 
             barber = BarberDetails.objects.get(
-                id=User.objects.get(username=request.data['barber']).id)
-            request.data.update({'barber': barber.id, 'user': request.user.id})
+                id=User.objects.get(username=request.data['barber']).id) # type: ignore
+            request.data.update({'barber': barber.id, 'user': request.user.id}) # type: ignore
 
             serializer = self.get_serializer(data=request.data)
 

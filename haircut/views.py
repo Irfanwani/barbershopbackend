@@ -12,14 +12,13 @@ from django.conf import settings
 
 import random
 
+
 def getUniqueCode(query):
-  code = random.randint(10000000, 99999999)
+    code = random.randint(10000000, 99999999)
 
-  if code not in query:
-    return code
-  getUniqueCode() # type: ignore
-
-
+    if code not in query:
+        return code
+    getUniqueCode()  # type: ignore
 
 
 # Create your views here.
@@ -58,7 +57,7 @@ class AppointmentView(generics.GenericAPIView):
         # Check if the barber exists
         try:
             barber = BarberDetails.objects.get(
-                id=User.objects.get(username=request.data['barber']).id)
+                id=User.objects.get(username=request.data['barber']).id)  # type: ignore
         except:
             return Response({
                 'message': 'This barber has no saved details. Please check again.'
@@ -135,19 +134,15 @@ class AppointmentView(generics.GenericAPIView):
         code = getUniqueCode(query)
 
         request.data.update(
-            {'user': request.user.id, 'barber': barber.id, 'datetime': parsedDate, 'bookingID': code})
+            {'user': request.user.id, 'barber': barber.id, 'datetime': parsedDate, 'bookingID': code})  # type: ignore
 
         serializer = self.get_serializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-
-
         send_mail(subject='Appointment fixed successfully.', message=f'Appointment fixed successfully! Here is your booking ID: {code}', from_email=getattr(
             settings, 'DEFAULT_FROM_EMAIL'), recipient_list=[f'{request.user.email}'])
-
-
 
         try:
             querylist = NotificationTokens.objects.filter(
@@ -188,7 +183,7 @@ class SaveToken(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         queryList = NotificationTokens.objects.filter(
-            user=self.request.user, token=self.request.data['token'])
+            user=self.request.user, token=self.request.data['token']) # type: ignore
         if queryList.exists():
             return
         serializer.save()
