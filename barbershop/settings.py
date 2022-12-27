@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY') or 'secret'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['barbershopbackend.herokuapp.com']
+ALLOWED_HOSTS = ['barbershopbackend.herokuapp.com', '10.0.2.2']
 
 
 if os.name == 'nt':
@@ -175,6 +175,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 

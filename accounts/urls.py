@@ -21,7 +21,7 @@ urlpatterns = [
     path('createbank', BankView.as_view()),
     path('addservices', ServicesView.as_view()),
     path('filterbarbers', BarberFilter.as_view()),
-    
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
