@@ -32,6 +32,7 @@ toml = ">=0.10.2"
 tzdata = ">=2022.1"
 urllib3 = ">=1.26.9"
 whitenoise = ">=6.0.0"
+python-dotenv = "^0.21.0"
 
 
 [build-system]
