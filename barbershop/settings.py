@@ -33,10 +33,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['10.0.2.2', '127.0.0.1', 'localhost', 'barbershopservices.pythonanywhere.com']
 
-
-# DATABASE SETUP
-# static files config for rest_framework + app
-
 if os.name == 'nt':
     import platform
     OSGEO4W = r"C:\OSGeo4W"
