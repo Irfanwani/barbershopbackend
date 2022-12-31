@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-# import dj_database_url
+import dj_database_url
 # import django_heroku
 import os
 from pathlib import Path
@@ -33,6 +33,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['10.0.2.2', '127.0.0.1', 'localhost', 'barbershopservices.pythonanywhere.com']
 
+
+# DATABASE SETUP
+# static files config for rest_framework + app
 
 if os.name == 'nt':
     import platform
@@ -138,8 +141,8 @@ DATABASES = {
     }
 }
 
-# db_from_env = dj_database_url.config(conn_max_age=600)
-# DATABASES['default'].update(db_from_env)
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -206,4 +209,4 @@ RAZOR_URL = os.getenv('RAZOR_URL')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # django_heroku.settings(locals())
-# DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'

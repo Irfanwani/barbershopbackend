@@ -33,6 +33,7 @@ tzdata = ">=2022.1"
 urllib3 = ">=1.26.9"
 whitenoise = ">=6.0.0"
 python-dotenv = "^0.21.0"
+dj-database-url = "^1.2.0"
 
 
 [build-system]
