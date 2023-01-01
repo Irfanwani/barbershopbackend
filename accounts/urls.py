@@ -3,8 +3,6 @@ from django.urls import path, include
 from accounts.views2 import BankView, ServicesView, BarberFilter
 from .views import GetUser, UserDetailsView, BarberDetailsView, GetBarber, AuthenticateUser
 from .register import RegistrationView, LoginView, EmailView, PasswordReset, DeleteUser
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('knox.urls')),
@@ -23,5 +21,3 @@ urlpatterns = [
     path('filterbarbers', BarberFilter.as_view()),
 
 ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
