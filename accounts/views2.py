@@ -125,6 +125,24 @@ class ServicesView(generics.GenericAPIView):
                 'error': 'There is some error. Please try again'
             }, status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        try:
+            service_provider = request.user.id
+            service_id = request.data['service_id']
+            if not len(self.get_queryset().filter(service_provider=service_provider, id=service_id)):
+                return Response({
+                    'error': 'You are not authorised to perform this action.'
+                }, status.HTTP_403_FORBIDDEN)
+
+            self.get_queryset().filter(id=service_id).delete()
+            return Response({
+                'message': 'Service removed.'
+            }, status.HTTP_204_NO_CONTENT)
+        except:
+            return Response({
+                'error': 'There is some error. Please try again'
+            }, status.HTTP_400_BAD_REQUEST)
+
 
 class BarberFilter(generics.GenericAPIView):
     serializer_class = BarberDetailSerializer
