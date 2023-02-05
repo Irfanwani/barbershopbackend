@@ -108,14 +108,14 @@ class ServicesView(generics.GenericAPIView):
                 'error': 'There is some error. Please try again'
             }, status=status.HTTP_400_BAD_REQUEST)
 
-
     def put(self, request):
         try:
             with transaction.atomic():
                 services = request.data['services_list']
 
                 for i in services:
-                    self.get_queryset().filter(id=i['id']).update(cost=i['cost'])
+                    self.get_queryset().filter(id=i['id']).update(
+                        cost=int(i['cost']) + math.ceil(int(i['cost'])/10))
 
             return Response({
                 'message': "Updated"
@@ -124,7 +124,7 @@ class ServicesView(generics.GenericAPIView):
             return Response({
                 'error': 'There is some error. Please try again'
             }, status.HTTP_400_BAD_REQUEST)
-            
+
 
 class BarberFilter(generics.GenericAPIView):
     serializer_class = BarberDetailSerializer
@@ -176,7 +176,7 @@ class BarberFilter(generics.GenericAPIView):
 
         serializer = self.get_serializer(barbers, many=True)
 
-        [barber.update({'username': User.objects.get(id=barber['id']).username, 'avg_ratings': RatingsAndReviews.objects.filter(barber=barber['id']).aggregate(avg_ratings=Round(Avg('ratings'), 2))['avg_ratings'], 'Distance': [round(b.distance.km, 2) # type: ignore
-                                                                                                                                                                                                                                  for b in barbers if b.id == User.objects.get(id=barber['id'])][0], 'start_time': datetime.strptime(barber['start_time'], "%H:%M:%S").strftime("%I:%M %p"), 'end_time': datetime.strptime(barber['end_time'], "%H:%M:%S").strftime("%I:%M %p")}) for barber in serializer.data] 
+        [barber.update({'username': User.objects.get(id=barber['id']).username, 'avg_ratings': RatingsAndReviews.objects.filter(barber=barber['id']).aggregate(avg_ratings=Round(Avg('ratings'), 2))['avg_ratings'], 'Distance': [round(b.distance.km, 2)  # type: ignore
+                                                                                                                                                                                                                                  for b in barbers if b.id == User.objects.get(id=barber['id'])][0], 'start_time': datetime.strptime(barber['start_time'], "%H:%M:%S").strftime("%I:%M %p"), 'end_time': datetime.strptime(barber['end_time'], "%H:%M:%S").strftime("%I:%M %p")}) for barber in serializer.data]
 
         return Response(serializer.data)
