@@ -183,7 +183,7 @@ class SaveToken(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         queryList = NotificationTokens.objects.filter(
-            user=self.request.user, token=self.request.data['token']) # type: ignore
+            user=self.request.user, token=self.request.data['token'])  # type: ignore
         if queryList.exists():
             return
         serializer.save()
