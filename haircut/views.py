@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.http.request import QueryDict
 from rest_framework import permissions, generics, serializers, status
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from django.core.mail import send_mail
 from accounts.models import User, BarberDetails
 
@@ -21,7 +22,12 @@ def getUniqueCode(query):
     getUniqueCode()  # type: ignore
 
 
-# Create your views here.
+class PaginationClass(PageNumberPagination):
+    page_size = 3
+    page_query_param = 'page_no'
+    max_page_size = 10
+
+
 class AppointmentView(generics.GenericAPIView):
     queryset = Appointments.objects.all()
     permission_classes = [
@@ -30,13 +36,19 @@ class AppointmentView(generics.GenericAPIView):
 
     serializer_class = AppointmentSerializer
 
+    pagination_class = PaginationClass
+
     def get(self, request):
+        print(request.query_params.get('page_no'))
         try:
-            serializer = self.get_serializer(
-                self.get_queryset().filter(Q(user=request.user) | Q(barber=BarberDetails.objects.get(id=request.user.id))).order_by('-paid'), many=True)
+            data = self.get_queryset().filter(Q(user=request.user) | Q(
+                barber=BarberDetails.objects.get(id=request.user.id))).order_by('-paid')
         except:
-            serializer = self.get_serializer(
-                self.get_queryset().filter(user=request.user).order_by('-paid'), many=True)
+            data = self.get_queryset().filter(user=request.user).order_by('-paid')
+
+        pg_queryset = self.paginate_queryset(data)
+
+        serializer = self.get_serializer(pg_queryset, many=True)
 
         # Converting datetime into human-readable string
         [app.update({'datetime': datetime.strptime(
