@@ -25,7 +25,6 @@ def getUniqueCode(query):
 class PaginationClass(PageNumberPagination):
     page_size = 3
     page_query_param = 'page_no'
-    max_page_size = 10
 
 
 class AppointmentView(generics.GenericAPIView):
@@ -42,11 +41,11 @@ class AppointmentView(generics.GenericAPIView):
         print(request.query_params.get('page_no'))
         try:
             data = self.get_queryset().filter(Q(user=request.user) | Q(
-                barber=BarberDetails.objects.get(id=request.user.id))).order_by('-paid')
+                barber=BarberDetails.objects.get(id=request.user.id)))
         except:
-            data = self.get_queryset().filter(user=request.user).order_by('-paid')
+            data = self.get_queryset().filter(user=request.user)
 
-        pg_queryset = self.paginate_queryset(data)
+        pg_queryset = self.paginate_queryset(data.order_by('-id'))
 
         serializer = self.get_serializer(pg_queryset, many=True)
 
