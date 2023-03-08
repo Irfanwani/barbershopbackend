@@ -1,3 +1,4 @@
+from time import sleep
 from django.db.models import Q
 from django.http.request import QueryDict
 from rest_framework import permissions, generics, serializers, status
@@ -23,7 +24,7 @@ def getUniqueCode(query):
 
 
 class PaginationClass(PageNumberPagination):
-    page_size = 3
+    page_size = 10
     page_query_param = 'page_no'
 
 
@@ -38,7 +39,6 @@ class AppointmentView(generics.GenericAPIView):
     pagination_class = PaginationClass
 
     def get(self, request):
-        print(request.query_params.get('page_no'))
         try:
             data = self.get_queryset().filter(Q(user=request.user) | Q(
                 barber=BarberDetails.objects.get(id=request.user.id)))
