@@ -1,7 +1,7 @@
 from time import sleep
 from django.db.models import Q
 from django.http.request import QueryDict
-from rest_framework import permissions, generics, serializers, status
+from rest_framework import permissions, generics, serializers, status, filters
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.core.mail import send_mail
@@ -20,7 +20,7 @@ def getUniqueCode(query):
 
     if code not in query:
         return code
-    getUniqueCode()  # type: ignore
+    getUniqueCode(query)
 
 
 class PaginationClass(PageNumberPagination):
@@ -38,6 +38,10 @@ class AppointmentView(generics.GenericAPIView):
 
     pagination_class = PaginationClass
 
+    search_fields = ['bookingID', 'services',
+                     'totalcost', 'user__username', 'paid', 'datetime']
+    filter_backends = (filters.SearchFilter,)
+
     def get(self, request):
         try:
             data = self.get_queryset().filter(Q(user=request.user) | Q(
@@ -45,7 +49,9 @@ class AppointmentView(generics.GenericAPIView):
         except:
             data = self.get_queryset().filter(user=request.user)
 
-        pg_queryset = self.paginate_queryset(data.order_by('-id'))
+        filtered_data = self.filter_queryset(data.order_by('-id'))
+
+        pg_queryset = self.paginate_queryset(filtered_data)
 
         serializer = self.get_serializer(pg_queryset, many=True)
 
