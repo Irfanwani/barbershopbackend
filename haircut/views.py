@@ -61,11 +61,6 @@ class AppointmentView(generics.GenericAPIView):
 
         appointments = serializer.data
 
-        if len(appointments) <= 0:
-            return Response({
-                'message': "No appointment fixed!"
-            }, status.HTTP_404_NOT_FOUND)
-
         return Response(appointments)
 
     def post(self, request):
