@@ -15,6 +15,7 @@ import dj_database_url
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,7 +78,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 
 REST_KNOX = {
-    'TOKEN_TTL': None
+    'TOKEN_TTL': timedelta(days=7)
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
