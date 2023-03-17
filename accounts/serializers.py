@@ -3,6 +3,8 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 
 # user serialization
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -18,8 +20,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
             'write_only': True, 'min_length': 8}, 'email': {'required': True, 'allow_blank': False}}
 
     def create(self, validated_data):
-        user = User.objects.create_user( # type: ignore
-             username=validated_data['username'], email=validated_data['email'], password=validated_data['password'])
+        user = User.objects.create_user(  # type: ignore
+            username=validated_data['username'], email=validated_data['email'], password=validated_data['password'])
 
         return user
 
@@ -111,6 +113,10 @@ class BarberDetailSerializer(serializers.ModelSerializer):
             pass
         try:
             instance.end_time = validated_data['end_time']
+        except:
+            pass
+        try:
+            instance.service_type = validated_data['service_type']
         except:
             pass
         instance.save()

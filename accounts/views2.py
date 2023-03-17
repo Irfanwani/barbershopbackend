@@ -95,8 +95,8 @@ class ServicesView(generics.GenericAPIView):
 
             servicesSelected = request.data['services_list']
 
-            servicesList = [ServicesDetails(service_provider=barber, service_type=request.data['service_type'],
-                                            service=servicesSelected[i]['service'], cost=int(servicesSelected[i]['cost']) + math.ceil(int(servicesSelected[i]['cost'])/10)) for i in range(len(servicesSelected))]
+            servicesList = [ServicesDetails(service_provider=barber, service=servicesSelected[i]['service'], cost=int(
+                servicesSelected[i]['cost']) + math.ceil(int(servicesSelected[i]['cost'])/10)) for i in range(len(servicesSelected))]
 
             ServicesDetails.objects.bulk_create(servicesList)
 
@@ -171,7 +171,7 @@ class BarberFilter(generics.GenericAPIView):
 
         try:
             service_type = request.data['service_type']
-            service_providers = [i['service_provider'] for i in self.get_queryset().filter(service_type=service_type).annotate(
+            service_providers = [i['service_provider'] for i in BarberDetails.objects.filter(service_type=service_type).annotate(
                 distance=Distance('service_provider__coords', user.coords, spheroid=True)).order_by('distance').values('service_provider')]
 
             barbers = BarberDetails.objects.filter(
