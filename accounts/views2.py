@@ -134,6 +134,11 @@ class ServicesView(generics.GenericAPIView):
                     'error': 'You are not authorised to perform this action.'
                 }, status.HTTP_403_FORBIDDEN)
 
+            if len(self.get_queryset().filter(service_provider=service_provider)) == 1:
+                return Response({
+                    'message': 'You cannot remove all the services',
+                }, status.HTTP_403_FORBIDDEN)
+
             self.get_queryset().filter(id=service_id).delete()
             return Response({
                 'message': 'Service removed.'

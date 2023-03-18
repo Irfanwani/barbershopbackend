@@ -127,7 +127,7 @@ class BarberDetailsView(generics.GenericAPIView):
         try:
             coords = Point(
                 float(request.data['lng']), float(request.data['lat']))
-            request.data.update({'coords': coords}) # type: ignore
+            request.data.update({'coords': coords})  # type: ignore
         except:
             pass
 
@@ -138,7 +138,7 @@ class BarberDetailsView(generics.GenericAPIView):
             parsed_st = datetime.strptime(start_time, "%H:%M").time()
             parsed_et = datetime.strptime(end_time, "%H:%M").time()
             request.data.update(
-                {'start_time': parsed_st, 'end_time': parsed_et}) # type: ignore
+                {'start_time': parsed_st, 'end_time': parsed_et})  # type: ignore
         except:
             pass
 
