@@ -2,6 +2,8 @@ from django.db import models
 from accounts.models import BarberDetails, User
 
 # Create your models here.
+
+
 class Appointments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     barber = models.ForeignKey(BarberDetails, on_delete=models.CASCADE)
@@ -28,7 +30,7 @@ class RatingsAndReviews(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ratings = models.PositiveIntegerField()
     comments = models.CharField(max_length=1000, blank=True, null=True)
-
+    date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.ratings} for {self.barber} by {self.user}'
