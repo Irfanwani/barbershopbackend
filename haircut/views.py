@@ -5,7 +5,7 @@ from rest_framework import permissions, generics, serializers, status, filters
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.core.mail import send_mail
-from accounts.models import User, BarberDetails
+from accounts.models import User, BarberDetails, UserDetails
 
 from .models import Appointments, NotificationTokens
 from .serializers import AppointmentSerializer, NotificationTokenSerializer
@@ -57,7 +57,7 @@ class AppointmentView(generics.GenericAPIView):
 
         # Converting datetime into human-readable string
         [app.update({'datetime': datetime.strptime(
-            app['datetime'], "%Y-%m-%dT%H:%M:%SZ").strftime("%A, %b %d, %Y %I:%M:%S %p"), 'user': User.objects.get(id=app['user']).username, 'barber': User.objects.get(id=app['barber']).username}) for app in serializer.data]
+            app['datetime'], "%Y-%m-%dT%H:%M:%SZ").strftime("%A, %b %d, %Y %I:%M:%S %p"), 'user': User.objects.get(id=app['user']).username, 'barber': User.objects.get(id=app['barber']).username, 'dp': UserDetails.objects.get(id=app['user']).image.url}) for app in serializer.data]
 
         appointments = serializer.data
 
