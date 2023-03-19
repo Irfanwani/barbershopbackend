@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from accounts.models import BarberDetails, User
+from accounts.models import BarberDetails, User, UserDetails
 from .models import RatingsAndReviews
 from .serializers import RatingsSerializer
 
@@ -23,7 +23,7 @@ class RatingsView(GenericAPIView):
             serializer = self.get_serializer(
                 self.get_queryset().filter(barber=barber_id), many=True)
 
-            [i.update({'user': User.objects.get(id=i['user']).username})
+            [i.update({'user': User.objects.get(id=i['user']).username, 'dp': UserDetails.objects.get(id=i['user']).image.url})
              for i in serializer.data]
 
             return Response(serializer.data)
@@ -39,8 +39,9 @@ class RatingsView(GenericAPIView):
                 request.data._mutable = True
 
             barber = BarberDetails.objects.get(
-                id=User.objects.get(username=request.data['barber']).id) # type: ignore
-            request.data.update({'barber': barber.id, 'user': request.user.id}) # type: ignore
+                id=User.objects.get(username=request.data['barber']).id)  # type: ignore
+            request.data.update(
+                {'barber': barber.id, 'user': request.user.id})  # type: ignore
 
             serializer = self.get_serializer(data=request.data)
 
