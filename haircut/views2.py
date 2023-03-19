@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from accounts.models import BarberDetails, User, UserDetails
 from .models import RatingsAndReviews
 from .serializers import RatingsSerializer
+from django.db.models import Avg
+from django.db.models.functions import Round
 
 
 class RatingsView(GenericAPIView):
@@ -26,7 +28,10 @@ class RatingsView(GenericAPIView):
             [i.update({'user': User.objects.get(id=i['user']).username, 'dp': UserDetails.objects.get(id=i['user']).image.url})
              for i in serializer.data]
 
-            return Response(serializer.data)
+            avg_ratings = RatingsAndReviews.objects.filter(barber=barber_id).aggregate(
+                avg_ratings=Round(Avg('ratings'), 2))['avg_ratings']
+
+            return Response({'data': serializer.data, 'avg_ratings': avg_ratings})
 
         except:
             return Response({
