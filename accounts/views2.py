@@ -142,7 +142,7 @@ class ServicesView(generics.GenericAPIView):
             self.get_queryset().filter(id=service_id).delete()
             return Response({
                 'message': 'Service removed.'
-            }, status.HTTP_204_NO_CONTENT)
+            }, status.HTTP_410_GONE)
         except:
             return Response({
                 'error': 'There is some error. Please try again'
