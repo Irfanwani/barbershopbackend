@@ -35,6 +35,8 @@ def check(email, user, request):
             details = BarberDetailSerializer(
                 barber, context={'request': request}).data
 
+            is_barber = True
+
             try:
                 BankDetails.objects.get(id=barber)
                 account_added = True
@@ -51,12 +53,14 @@ def check(email, user, request):
                 id=User.objects.get(username=user).id), context={'request': request}).data  # type: ignore
             account_added = False
             services_added = False
+            is_barber = False
     except:
         details = None
         account_added = False
         services_added = False
+        is_barber = True
 
-    return verified, details, account_added, services_added
+    return verified, details, account_added, services_added, is_barber
 
 
 # Registration
@@ -178,7 +182,7 @@ class LoginView(generics.GenericAPIView):
         user = serializer.validated_data
         email = User.objects.get(username=user).email
 
-        verified, details, account_added, services_added = check(
+        verified, details, account_added, services_added, is_barber = check(
             email, user, request)
 
         _, token = AuthToken.objects.create(user)
@@ -192,7 +196,8 @@ class LoginView(generics.GenericAPIView):
             'verified': verified,
             'details': details,
             'account_added': account_added,
-            'services_added': services_added
+            'services_added': services_added,
+            'is_barber': is_barber
         })
 
 
@@ -269,7 +274,7 @@ class PasswordReset(generics.GenericAPIView):
                 send_mail(subject='Password changed successfully!', message=f'Your password was updated successfully!',
                           from_email=getattr(settings, 'DEFAULT_FROM_EMAIL'), recipient_list=[f"{email}"], fail_silently=False)
 
-                verified, details, account_added, services_added = check(
+                verified, details, account_added, services_added, is_barber = check(
                     email, user, request)
 
                 _, token = AuthToken.objects.create(user)
@@ -279,7 +284,8 @@ class PasswordReset(generics.GenericAPIView):
                     'verified': verified,
                     'details': details,
                     'account_added': account_added,
-                    'services_added': services_added
+                    'services_added': services_added,
+                    'is_barber': is_barber
                 })
 
             return Response({

@@ -183,12 +183,13 @@ class AuthenticateUser(APIView):
     ]
 
     def get(self, request):
-        verified, details, account_added, services_added = check(
+        verified, details, account_added, services_added, is_barber = check(
             request.user.email, request.user.username, request)
 
         return Response({
             'verified': verified,
             'details': details,
             'account_added': account_added,
-            'services_added': services_added
+            'services_added': services_added,
+            'is_barber': is_barber
         })
