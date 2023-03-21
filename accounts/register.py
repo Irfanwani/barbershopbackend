@@ -91,7 +91,8 @@ class RegistrationView(generics.GenericAPIView):
 
         return Response({
             'user': UserSerializer(user, context=self.get_serializer_context()).data,
-            'token': token
+            'token': token,
+            'is_barber': True
         })
 
 
