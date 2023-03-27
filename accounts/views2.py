@@ -176,8 +176,8 @@ class BarberFilter(generics.GenericAPIView):
 
         try:
             service_type = request.data['service_type']
-            service_providers = [i['service_provider'] for i in BarberDetails.objects.filter(service_type=service_type).annotate(
-                distance=Distance('service_provider__coords', user.coords, spheroid=True)).order_by('distance').values('service_provider')]
+            service_providers = BarberDetails.objects.filter(service_type=service_type).annotate(
+                distance=Distance('coords', user.coords, spheroid=True)).order_by('distance')[start:end]
 
             barbers = BarberDetails.objects.filter(
                 id__in=service_providers).annotate(distance=Distance('coords', user.coords, spheroid=True))[start:end]
@@ -189,7 +189,7 @@ class BarberFilter(generics.GenericAPIView):
         try:
             selected_services = request.data['services']
             queries = [i['service_provider'] for i in self.get_queryset().values('service_provider').filter(service__in=selected_services).annotate(
-                ct=Count('service_provider')).filter(ct__gte=len(selected_services)).annotate(distance=Distance('service_provider__coords', user.coords, spheroid=True)).order_by('distance')[start:end]]
+                ct=Count('service_provider')).filter(ct__gte=len(selected_services)).annotate(distance=Distance('service_provider__coords', user.coords, spheroid=True)).order_by('distance')[start:end]]  
 
             barbers = BarberDetails.objects.filter(id__in=queries).annotate(
                 distance=Distance('coords', user.coords, spheroid=True))
