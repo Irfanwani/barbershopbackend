@@ -34,6 +34,8 @@ whitenoise = {extras = ["brotli"], version = "^6.4.0"}
 python-dotenv = "^0.21.0"
 dj-database-url = "^1.2.0"
 psycopg2-binary = "^2.9.5"
+django-storages = "^1.13.2"
+boto3 = "^1.26.104"
 
 
 [build-system]
