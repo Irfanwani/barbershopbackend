@@ -5,6 +5,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from accounts.models import BarberDetails, User, UserDetails
+from accounts.serializers import UserDetailSerializer
 from .models import RatingsAndReviews
 from .serializers import RatingsSerializer
 from django.db.models import Avg
@@ -25,7 +26,7 @@ class RatingsView(GenericAPIView):
             serializer = self.get_serializer(
                 self.get_queryset().filter(barber=barber_id), many=True)
 
-            [i.update({'user': User.objects.get(id=i['user']).username, 'dp': UserDetails.objects.get(id=i['user']).image.url})
+            [i.update({'user': User.objects.get(id=i['user']).username, 'dp': UserDetailSerializer(UserDetails.objects.get(id=i['user']), context=self.get_serializer_context()).data['image']})
              for i in serializer.data]
 
             avg_ratings = RatingsAndReviews.objects.filter(barber=barber_id).aggregate(
